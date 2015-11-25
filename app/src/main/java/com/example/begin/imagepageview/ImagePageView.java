@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.loopj.android.image.SmartImageView;
+
 import java.util.LinkedList;
 
 /**
@@ -76,19 +78,24 @@ public class ImagePageView extends RelativeLayout {
                 views.add(view);
                 layout.addView(view);
             }
-            ImageView imageView = new ImageView(context);
-            switch (type) {
-                case BITMAP:
-                    imageView.setBackground(new BitmapDrawable(null, (Bitmap) images.get(i)));
-                    break;
-                case RESID:
-                    imageView.setBackgroundResource((int) images.get(i));
-                    break;
-                case URL:
-                    break;
+            if (type==URL){
+                SmartImageView smartImageView = new SmartImageView(context);
+                smartImageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                smartImageView.setImageUrl((String)images.get(i));
+                imageViews.add(smartImageView);
+            }else {
+                ImageView imageView = new ImageView(context);
+                switch (type) {
+                    case BITMAP:
+                        imageView.setBackground(new BitmapDrawable(null, (Bitmap) images.get(i)));
+                        break;
+                    case RESID:
+                        imageView.setBackgroundResource((int) images.get(i));
+                        break;
+                }
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                imageViews.add(imageView);
             }
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            imageViews.add(imageView);
         }
         viewPager.setOffscreenPageLimit(1);
         viewPager.setAdapter(new MyAdapter());
